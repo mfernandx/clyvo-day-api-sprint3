@@ -157,10 +157,10 @@ ClyvoDayApiWeb.sln
 ├── ClyvoDayApiWeb.Infrastructure
 │   └── Observability
 │
-├── ClyvoDayApiWeb.UnitTests
+├── ClyvoDayApiWeb.Unit.Tests
 │   └── Services
 │
-└── ClyvoDayApiWeb.IntegrationTests
+└── ClyvoDayApiWeb.Integration.Tests
     ├── Controllers
     └── FactoryFixture
 ```
@@ -744,7 +744,7 @@ dotnet --version
 ## 1. Clonar o repositório
 
 ```bash
-git clone <URL_DO_REPOSITORIO>
+git clone https://github.com/mfernandx/clyvo-day-api-sprint3.git
 cd <PASTA_DO_REPOSITORIO>
 ```
 
@@ -779,8 +779,6 @@ Exemplo conceitual:
   }
 }
 ```
-
-> ⚠️ Não publique credenciais reais, senhas do banco ou chaves JWT no GitHub.
 
 ---
 
@@ -1027,8 +1025,8 @@ POST /api/CommunityPost
 A solução possui dois projetos dedicados aos testes.
 
 ```text
-ClyvoDayApiWeb.UnitTests
-ClyvoDayApiWeb.IntegrationTests
+ClyvoDayApiWeb.Unit.Tests
+ClyvoDayApiWeb.Integration.Tests
 ```
 
 ---
@@ -1106,13 +1104,13 @@ dotnet test
 Para executar apenas os Unit Tests:
 
 ```bash
-dotnet test ClyvoDayApiWeb.UnitTests
+dotnet test ClyvoDayApiWeb.Unit.Tests
 ```
 
 Para executar apenas os Integration Tests:
 
 ```bash
-dotnet test ClyvoDayApiWeb.IntegrationTests
+dotnet test ClyvoDayApiWeb.Integration.Tests
 ```
 
 Uma execução bem-sucedida deve finalizar sem testes com status `Failed`.
@@ -1122,7 +1120,7 @@ Uma execução bem-sucedida deve finalizar sem testes com status `Failed`.
 # 🧪 Organização dos testes
 
 ```text
-ClyvoDayApiWeb.UnitTests
+ClyvoDayApiWeb.Unit.Tests
 └── Services
     ├── UserServiceTests
     ├── TutorServiceTests
@@ -1133,7 +1131,7 @@ ClyvoDayApiWeb.UnitTests
     ├── CareEventServiceTests
     └── CommunityPostServiceTests
 
-ClyvoDayApiWeb.IntegrationTests
+ClyvoDayApiWeb.Integration.Tests
 ├── FactoryFixture
 │   └── ApiFactoryFixture.cs
 │
@@ -1201,8 +1199,6 @@ Algumas práticas utilizadas no projeto:
 * não exposição intencional de senha em respostas;
 * controle de acesso aos registros do pet;
 * secrets externos ao código-fonte.
-
-> Nunca faça commit de connection strings com credenciais reais, chaves JWT ou outros secrets.
 
 ---
 
