@@ -1284,3 +1284,9 @@ Além das funcionalidades do domínio, o projeto foi desenvolvido para demonstra
 
 ---
 
+# 👨‍💻 Integrantes da Equipe
+
+* Maria Fernanda Santos Mendes - 2TDSPI
+* Beatriz de Sousa Franco – 2TDSPI
+* Giovana Souza Vieira - 2TDSPI 
+
