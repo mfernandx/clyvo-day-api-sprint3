@@ -3,15 +3,19 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 WORKDIR /src
 
-# Copia apenas o csproj primeiro para aproveitar o cache do Docker
+# Copia os arquivos .csproj necessários
 COPY ClyvoDayApiWeb/ClyvoDayApiWeb.csproj ClyvoDayApiWeb/
+COPY ClyvoDayApiWeb.Infrastructure/ClyvoDayApiWeb.Infrastructure.csproj ClyvoDayApiWeb.Infrastructure/
 
+# Restaura as dependências da API
+RUN dotnet restore ClyvoDayApiWeb/ClyvoDayApiWeb.csproj
+
+# Copia os códigos dos projetos
+COPY ClyvoDayApiWeb/. ClyvoDayApiWeb/
+COPY ClyvoDayApiWeb.Infrastructure/. ClyvoDayApiWeb.Infrastructure/
+
+# Entra na pasta da API
 WORKDIR /src/ClyvoDayApiWeb
-
-RUN dotnet restore
-
-# Copia o restante dos arquivos da API
-COPY ClyvoDayApiWeb/. .
 
 # Publica a aplicação
 RUN dotnet publish -c Release -o /app/publish --no-restore
@@ -22,7 +26,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 
 WORKDIR /app
 
-# Copia apenas os arquivos publicados
+# Copia os arquivos publicados
 COPY --from=build /app/publish .
 
 # Porta HTTP da aplicação
