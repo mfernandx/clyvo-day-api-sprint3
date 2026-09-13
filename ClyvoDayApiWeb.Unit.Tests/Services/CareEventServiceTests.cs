@@ -23,8 +23,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
         {
             var options =
                 new DbContextOptionsBuilder<AppDbContext>()
-                    .UseInMemoryDatabase(
-                        Guid.NewGuid().ToString())
+                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
                     .Options;
 
             return new AppDbContext(options);
@@ -32,20 +31,16 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
 
         private static IMeterFactory CreateMeterFactory()
         {
-            var services =
-                new ServiceCollection();
+            var services = new ServiceCollection();
 
             services.AddMetrics();
 
-            var serviceProvider =
-                services.BuildServiceProvider();
+            var serviceProvider = services.BuildServiceProvider();
 
-            return serviceProvider
-                .GetRequiredService<IMeterFactory>();
+            return serviceProvider.GetRequiredService<IMeterFactory>();
         }
 
-        private static async Task<(Tutor tutor, Pet pet)>
-            CreateTutorAndPetAsync(AppDbContext context)
+        private static async Task<(Tutor tutor, Pet pet)>CreateTutorAndPetAsync(AppDbContext context)
         {
             var tutor = new Tutor(
                 fullName: "Maria Silva",
@@ -79,8 +74,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
         public async Task CreateCareEventAsync_EventoNulo_DeveLancarArgumentException()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context = CreateContext();
 
             var service =
                 new CareEventService(
@@ -89,22 +83,17 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
                     CreateMeterFactory());
 
             // Act
-            var exception =
-                await Assert.ThrowsAsync<ArgumentException>(
-                    () => service.CreateCareEventAsync(null!));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.CreateCareEventAsync(null!));
 
             // Assert
-            Assert.Equal(
-                "Os dados do evento são obrigatórios.",
-                exception.Message);
+            Assert.Equal("Os dados do evento são obrigatórios.",exception.Message);
         }
 
         [Fact]
         public async Task CreateCareEventAsync_PetIdInvalido_DeveLancarArgumentException()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context = CreateContext();
 
             var service =
                 new CareEventService(
@@ -122,23 +111,17 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
                 );
 
             // Act
-            var exception =
-                await Assert.ThrowsAsync<ArgumentException>(
-                    () => service.CreateCareEventAsync(
-                        careEvent));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.CreateCareEventAsync(careEvent));
 
             // Assert
-            Assert.Equal(
-                "O pet do evento é obrigatório.",
-                exception.Message);
+            Assert.Equal("O pet do evento é obrigatório.",exception.Message);
         }
 
         [Fact]
         public async Task CreateCareEventAsync_PetNaoExiste_DeveLancarKeyNotFoundException()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context = CreateContext();
 
             var service =
                 new CareEventService(
@@ -156,32 +139,22 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
                 );
 
             // Act
-            var exception =
-                await Assert.ThrowsAsync<KeyNotFoundException>(
-                    () => service.CreateCareEventAsync(
-                        careEvent));
+            var exception = await Assert.ThrowsAsync<KeyNotFoundException>(() => service.CreateCareEventAsync(careEvent));
 
             // Assert
-            Assert.Equal(
-                "Pet não encontrado.",
-                exception.Message);
+            Assert.Equal("Pet não encontrado.",exception.Message);
         }
 
         [Fact]
         public async Task CreateCareEventAsync_DescricaoVazia_DeveLancarArgumentException()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context = CreateContext();
 
-            var (_, pet) =
-                await CreateTutorAndPetAsync(context);
+            var (_, pet) = await CreateTutorAndPetAsync(context);
 
             var service =
-                new CareEventService(
-                    context,
-                    _loggerMock.Object,
-                    CreateMeterFactory());
+                new CareEventService(context,_loggerMock.Object,CreateMeterFactory());
 
             var careEvent =
                 new CareEvent(
@@ -193,26 +166,19 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
                 );
 
             // Act
-            var exception =
-                await Assert.ThrowsAsync<ArgumentException>(
-                    () => service.CreateCareEventAsync(
-                        careEvent));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.CreateCareEventAsync(careEvent));
 
             // Assert
-            Assert.Equal(
-                "A descrição do evento é obrigatória.",
-                exception.Message);
+            Assert.Equal("A descrição do evento é obrigatória.",exception.Message);
         }
 
         [Fact]
         public async Task CreateCareEventAsync_DadosValidos_DeveCriarEvento()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context = CreateContext();
 
-            var (_, pet) =
-                await CreateTutorAndPetAsync(context);
+            var (_, pet) = await CreateTutorAndPetAsync(context);
 
             var service =
                 new CareEventService(
@@ -220,8 +186,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
                     _loggerMock.Object,
                     CreateMeterFactory());
 
-            var eventDate =
-                DateTime.UtcNow.AddDays(10);
+            var eventDate = DateTime.UtcNow.AddDays(10);
 
             var careEvent =
                 new CareEvent(
@@ -233,51 +198,30 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
                 );
 
             // Act
-            var result =
-                await service.CreateCareEventAsync(
-                    careEvent);
+            var result = await service.CreateCareEventAsync(careEvent);
 
             // Assert
             Assert.NotNull(result);
 
-            Assert.True(
-                result.CareEventId > 0);
+            Assert.True(result.CareEventId > 0);
 
-            Assert.Equal(
-                pet.PetId,
-                result.PetId);
+            Assert.Equal(pet.PetId,result.PetId);
 
-            Assert.Equal(
-                "Vacinação",
-                result.TypeEvent);
+            Assert.Equal("Vacinação",result.TypeEvent);
 
-            Assert.Equal(
-                "Vacina B12",
-                result.Description);
+            Assert.Equal("Vacina B12",result.Description);
 
-            Assert.Equal(
-                EnumCareEventStatus.Scheduled,
-                result.Status);
+            Assert.Equal(EnumCareEventStatus.Scheduled, result.Status);
 
-            var eventoSalvo =
-                await context.CareEvents
-                    .FirstOrDefaultAsync(
-                        c => c.CareEventId ==
-                             result.CareEventId);
+            var eventoSalvo = await context.CareEvents.FirstOrDefaultAsync(c => c.CareEventId == result.CareEventId);
 
             Assert.NotNull(eventoSalvo);
 
-            Assert.Equal(
-                pet.PetId,
-                eventoSalvo.PetId);
+            Assert.Equal(pet.PetId,eventoSalvo.PetId);
 
-            Assert.Equal(
-                "Vacinação",
-                eventoSalvo.TypeEvent);
+            Assert.Equal("Vacinação",eventoSalvo.TypeEvent);
 
-            Assert.Equal(
-                EnumCareEventStatus.Scheduled,
-                eventoSalvo.Status);
+            Assert.Equal(EnumCareEventStatus.Scheduled,eventoSalvo.Status);
         }
     }
 }

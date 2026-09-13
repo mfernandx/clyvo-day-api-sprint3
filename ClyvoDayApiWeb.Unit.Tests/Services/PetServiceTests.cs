@@ -58,8 +58,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
         public async Task CreatePetAsync_NomeVazio_DeveLancarArgumentException()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context = CreateContext();
 
             var service = new PetService(
                 context,
@@ -77,14 +76,10 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
             );
 
             // Act
-            var exception =
-                await Assert.ThrowsAsync<ArgumentException>(
-                    () => service.CreatePetAsync(pet));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.CreatePetAsync(pet));
 
             // Assert
-            Assert.Equal(
-                "O nome do pet é obrigatório.",
-                exception.Message);
+            Assert.Equal("O nome do pet é obrigatório.",exception.Message);
         }
 
         [Fact]

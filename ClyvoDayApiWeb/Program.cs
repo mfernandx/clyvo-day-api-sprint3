@@ -31,18 +31,13 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
-//Buscando conecxão com o banco de dados Oracle a partir do arquivo appsettings.json
-//var connectionString = builder.Configuration.GetConnectionString("OracleConnection");
-
-var connectionString =
-    Environment.GetEnvironmentVariable("OracleConnection")
-    ?? builder.Configuration.GetConnectionString("OracleConnection");
-
 //Injetando o contexto do banco de dados na aplicação, utilizando a string de conexão obtida
-builder.Services.AddDbContext<AppDbContext>(
-    options =>
-    options.UseOracle(connectionString,
-    compatibility => compatibility.UseOracleSQLCompatibility(OracleSQLCompatibility.DatabaseVersion19)));
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        new MySqlServerVersion(new Version(8, 0, 0))
+    )
+);
 
 
 builder.Services.AddHealthChecks()
@@ -188,7 +183,7 @@ app.MapHealthChecks("/health/live", new HealthCheckOptions
     Predicate = check => check.Tags.Contains("live")
 });
 
-// API pronta (inclui banco Oracle)
+// API pronta (inclui banco de dados)
 app.MapHealthChecks("/health/ready", new HealthCheckOptions
 {
     Predicate = check => check.Tags.Contains("ready")
@@ -223,7 +218,7 @@ app.MapHealthChecks("/health/details", new HealthCheckOptions
     }
 });
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Urls.Add($"http://0.0.0.0:{port}");
 
 app.Run();

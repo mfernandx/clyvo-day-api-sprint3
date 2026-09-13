@@ -15,16 +15,14 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
 
         public PetMonitoringServiceTests()
         {
-            _loggerMock =
-                new Mock<ILogger<PetMonitoringService>>();
+            _loggerMock = new Mock<ILogger<PetMonitoringService>>();
         }
 
         private static AppDbContext CreateContext()
         {
             var options =
                 new DbContextOptionsBuilder<AppDbContext>()
-                    .UseInMemoryDatabase(
-                        Guid.NewGuid().ToString())
+                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
                     .Options;
 
             return new AppDbContext(options);
@@ -32,20 +30,16 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
 
         private static IMeterFactory CreateMeterFactory()
         {
-            var services =
-                new ServiceCollection();
+            var services = new ServiceCollection();
 
             services.AddMetrics();
 
-            var serviceProvider =
-                services.BuildServiceProvider();
+            var serviceProvider = services.BuildServiceProvider();
 
-            return serviceProvider
-                .GetRequiredService<IMeterFactory>();
+            return serviceProvider.GetRequiredService<IMeterFactory>();
         }
 
-        private static async Task<(Tutor tutor, Pet pet)>
-            CreateTutorAndPetAsync(AppDbContext context)
+        private static async Task<(Tutor tutor, Pet pet)>CreateTutorAndPetAsync(AppDbContext context)
         {
             var tutor = new Tutor(
                 fullName: "Maria Silva",
@@ -79,8 +73,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
         public async Task CreateAsync_MonitoramentoNulo_DeveLancarArgumentException()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context = CreateContext();
 
             var service =
                 new PetMonitoringService(
@@ -89,24 +82,17 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
                     CreateMeterFactory());
 
             // Act
-            var exception =
-                await Assert.ThrowsAsync<ArgumentException>(
-                    () => service.CreateAsync(
-                        null!,
-                        1));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.CreateAsync(null!,1));
 
             // Assert
-            Assert.Equal(
-                "Os dados do monitoramento são obrigatórios.",
-                exception.Message);
+            Assert.Equal("Os dados do monitoramento são obrigatórios.",exception.Message);
         }
 
         [Fact]
         public async Task CreateAsync_PetNaoExiste_DeveLancarInvalidOperationException()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context = CreateContext();
 
             var service =
                 new PetMonitoringService(
@@ -130,27 +116,19 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
                 );
 
             // Act
-            var exception =
-                await Assert.ThrowsAsync<InvalidOperationException>(
-                    () => service.CreateAsync(
-                        monitoring,
-                        1));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => service.CreateAsync(monitoring,1));
 
             // Assert
-            Assert.Equal(
-                "Pet não encontrado.",
-                exception.Message);
+            Assert.Equal("Pet não encontrado.",exception.Message);
         }
 
         [Fact]
         public async Task CreateAsync_UsuarioNaoEhTutorDoPet_DeveLancarUnauthorizedAccessException()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context = CreateContext();
 
-            var (_, pet) =
-                await CreateTutorAndPetAsync(context);
+            var (_, pet) = await CreateTutorAndPetAsync(context);
 
             var service =
                 new PetMonitoringService(
@@ -176,27 +154,19 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
             var outroUsuarioId = 999;
 
             // Act
-            var exception =
-                await Assert.ThrowsAsync<UnauthorizedAccessException>(
-                    () => service.CreateAsync(
-                        monitoring,
-                        outroUsuarioId));
+            var exception = await Assert.ThrowsAsync<UnauthorizedAccessException>(() => service.CreateAsync(monitoring,outroUsuarioId));
 
             // Assert
-            Assert.Equal(
-                "Você não pode criar monitoramentos para este pet.",
-                exception.Message);
+            Assert.Equal("Você não pode criar monitoramentos para este pet.",exception.Message);
         }
 
         [Fact]
         public async Task CreateAsync_NenhumCampoPreenchido_DeveLancarArgumentException()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context = CreateContext();
 
-            var (tutor, pet) =
-                await CreateTutorAndPetAsync(context);
+            var (tutor, pet) = await CreateTutorAndPetAsync(context);
 
             var service =
                 new PetMonitoringService(
@@ -220,27 +190,19 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
                 );
 
             // Act
-            var exception =
-                await Assert.ThrowsAsync<ArgumentException>(
-                    () => service.CreateAsync(
-                        monitoring,
-                        tutor.UserId));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.CreateAsync(monitoring,tutor.UserId));
 
             // Assert
-            Assert.Equal(
-                "Preencha pelo menos um campo do monitoramento.",
-                exception.Message);
+            Assert.Equal("Preencha pelo menos um campo do monitoramento.",exception.Message);
         }
 
         [Fact]
         public async Task CreateAsync_PesoInvalido_DeveLancarArgumentException()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context =CreateContext();
 
-            var (tutor, pet) =
-                await CreateTutorAndPetAsync(context);
+            var (tutor, pet) =await CreateTutorAndPetAsync(context);
 
             var service =
                 new PetMonitoringService(
@@ -264,27 +226,19 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
                 );
 
             // Act
-            var exception =
-                await Assert.ThrowsAsync<ArgumentException>(
-                    () => service.CreateAsync(
-                        monitoring,
-                        tutor.UserId));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.CreateAsync(monitoring,tutor.UserId));
 
             // Assert
-            Assert.Equal(
-                "O peso deve ser maior que zero.",
-                exception.Message);
+            Assert.Equal("O peso deve ser maior que zero.",exception.Message);
         }
 
         [Fact]
         public async Task CreateAsync_DadosValidos_DeveCriarMonitoramento()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context = CreateContext();
 
-            var (tutor, pet) =
-                await CreateTutorAndPetAsync(context);
+            var (tutor, pet) = await CreateTutorAndPetAsync(context);
 
             var service =
                 new PetMonitoringService(
@@ -307,53 +261,31 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
                     observations: "Sem alterações"
                 );
 
-            var scoreAntes =
-                tutor.ScoreEngagement;
+            var scoreAntes = tutor.ScoreEngagement;
 
             // Act
-            var result =
-                await service.CreateAsync(
-                    monitoring,
-                    tutor.UserId);
+            var result = await service.CreateAsync(monitoring,tutor.UserId);
 
             // Assert
             Assert.NotNull(result);
 
-            Assert.True(
-                result.PetMonitoringId > 0);
+            Assert.True(result.PetMonitoringId > 0);
 
-            Assert.Equal(
-                pet.PetId,
-                result.PetId);
+            Assert.Equal(pet.PetId,result.PetId);
 
-            Assert.Equal(
-                "Feliz",
-                result.Mood);
+            Assert.Equal("Feliz",result.Mood);
 
-            Assert.Equal(
-                5.5m,
-                result.Weight);
+            Assert.Equal(5.5m,result.Weight);
 
-            var monitoringSalvo =
-                await context.PetMonitorings
-                    .FirstOrDefaultAsync(
-                        p => p.PetMonitoringId ==
-                             result.PetMonitoringId);
+            var monitoringSalvo = await context.PetMonitorings.FirstOrDefaultAsync(p => p.PetMonitoringId ==result.PetMonitoringId);
 
-            Assert.NotNull(
-                monitoringSalvo);
+            Assert.NotNull(monitoringSalvo);
 
-            Assert.Equal(
-                pet.PetId,
-                monitoringSalvo.PetId);
+            Assert.Equal(pet.PetId,monitoringSalvo.PetId);
 
-            Assert.Equal(
-                "Feliz",
-                monitoringSalvo.Mood);
+            Assert.Equal("Feliz",monitoringSalvo.Mood);
 
-            Assert.True(
-                tutor.ScoreEngagement >
-                scoreAntes);
+            Assert.True(tutor.ScoreEngagement > scoreAntes);
         }
     }
 }

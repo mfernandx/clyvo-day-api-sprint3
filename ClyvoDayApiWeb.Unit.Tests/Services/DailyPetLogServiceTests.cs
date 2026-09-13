@@ -24,8 +24,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
         {
             var options =
                 new DbContextOptionsBuilder<AppDbContext>()
-                    .UseInMemoryDatabase(
-                        Guid.NewGuid().ToString())
+                    .UseInMemoryDatabase(Guid.NewGuid().ToString())
                     .Options;
 
             return new AppDbContext(options);
@@ -33,20 +32,16 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
 
         private static IMeterFactory CreateMeterFactory()
         {
-            var services =
-                new ServiceCollection();
+            var services = new ServiceCollection();
 
             services.AddMetrics();
 
-            var serviceProvider =
-                services.BuildServiceProvider();
+            var serviceProvider = services.BuildServiceProvider();
 
-            return serviceProvider
-                .GetRequiredService<IMeterFactory>();
+            return serviceProvider.GetRequiredService<IMeterFactory>();
         }
 
-        private static async Task<(Tutor tutor, Pet pet)>
-            CreateTutorAndPetAsync(AppDbContext context)
+        private static async Task<(Tutor tutor, Pet pet)>CreateTutorAndPetAsync(AppDbContext context)
         {
             var tutor = new Tutor(
                 fullName: "Maria Silva",
@@ -80,8 +75,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
         public async Task CreateAsync_RegistroNulo_DeveLancarArgumentException()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context = CreateContext();
 
             var service =
                 new DailyPetLogService(
@@ -90,24 +84,17 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
                     CreateMeterFactory());
 
             // Act
-            var exception =
-                await Assert.ThrowsAsync<ArgumentException>(
-                    () => service.CreateAsync(
-                        null!,
-                        1));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.CreateAsync(null!,1));
 
             // Assert
-            Assert.Equal(
-                "Os dados do registro diário são obrigatórios.",
-                exception.Message);
+            Assert.Equal("Os dados do registro diário são obrigatórios.",exception.Message);
         }
 
         [Fact]
         public async Task CreateAsync_PetNaoExiste_DeveLancarInvalidOperationException()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context = CreateContext();
 
             var service =
                 new DailyPetLogService(
@@ -126,27 +113,19 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
                 );
 
             // Act
-            var exception =
-                await Assert.ThrowsAsync<InvalidOperationException>(
-                    () => service.CreateAsync(
-                        dailyPetLog,
-                        1));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => service.CreateAsync(dailyPetLog,1));
 
             // Assert
-            Assert.Equal(
-                "Pet não encontrado.",
-                exception.Message);
+            Assert.Equal("Pet não encontrado.",exception.Message);
         }
 
         [Fact]
         public async Task CreateAsync_UsuarioNaoEhTutorDoPet_DeveLancarUnauthorizedAccessException()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context = CreateContext();
 
-            var (_, pet) =
-                await CreateTutorAndPetAsync(context);
+            var (_, pet) = await CreateTutorAndPetAsync(context);
 
             var service =
                 new DailyPetLogService(
@@ -168,26 +147,19 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
 
             // Act
             var exception =
-                await Assert.ThrowsAsync<UnauthorizedAccessException>(
-                    () => service.CreateAsync(
-                        dailyPetLog,
-                        outroUsuarioId));
+                await Assert.ThrowsAsync<UnauthorizedAccessException>(() => service.CreateAsync(dailyPetLog,outroUsuarioId));
 
             // Assert
-            Assert.Equal(
-                "Você não pode criar registros para este pet.",
-                exception.Message);
+            Assert.Equal("Você não pode criar registros para este pet.",exception.Message);
         }
 
         [Fact]
         public async Task CreateAsync_ConteudoVazio_DeveLancarArgumentException()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context = CreateContext();
 
-            var (tutor, pet) =
-                await CreateTutorAndPetAsync(context);
+            var (tutor, pet) = await CreateTutorAndPetAsync(context);
 
             var service =
                 new DailyPetLogService(
@@ -206,27 +178,19 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
                 );
 
             // Act
-            var exception =
-                await Assert.ThrowsAsync<ArgumentException>(
-                    () => service.CreateAsync(
-                        dailyPetLog,
-                        tutor.UserId));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.CreateAsync(dailyPetLog,tutor.UserId));
 
             // Assert
-            Assert.Equal(
-                "O conteúdo do registro é obrigatório.",
-                exception.Message);
+            Assert.Equal("O conteúdo do registro é obrigatório.",exception.Message);
         }
 
         [Fact]
         public async Task CreateAsync_DadosValidos_DeveCriarRegistroDiario()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context = CreateContext();
 
-            var (tutor, pet) =
-                await CreateTutorAndPetAsync(context);
+            var (tutor, pet) = await CreateTutorAndPetAsync(context);
 
             var service =
                 new DailyPetLogService(
@@ -244,61 +208,35 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
                     privacy: EnumPrivacy.Privado
                 );
 
-            var scoreAntes =
-                tutor.ScoreEngagement;
+            var scoreAntes = tutor.ScoreEngagement;
 
             // Act
-            var result =
-                await service.CreateAsync(
-                    dailyPetLog,
-                    tutor.UserId);
+            var result = await service.CreateAsync(dailyPetLog,tutor.UserId);
 
             // Assert
             Assert.NotNull(result);
 
-            Assert.True(
-                result.DailyPetLogId > 0);
+            Assert.True(result.DailyPetLogId > 0);
 
-            Assert.Equal(
-                pet.PetId,
-                result.PetId);
+            Assert.Equal(pet.PetId,result.PetId);
 
-            Assert.Equal(
-                tutor.UserId,
-                result.CreatedByUserId);
+            Assert.Equal(tutor.UserId,result.CreatedByUserId);
 
-            Assert.Equal(
-                "Comportamento",
-                result.DailyPetLogType);
+            Assert.Equal("Comportamento",result.DailyPetLogType);
 
-            Assert.Equal(
-                "Luna ficou tranquila durante o dia.",
-                result.Content);
+            Assert.Equal("Luna ficou tranquila durante o dia.",result.Content);
 
-            var registroSalvo =
-                await context.DailyPetLogs
-                    .FirstOrDefaultAsync(
-                        d => d.DailyPetLogId ==
-                             result.DailyPetLogId);
+            var registroSalvo = await context.DailyPetLogs.FirstOrDefaultAsync(d => d.DailyPetLogId == result.DailyPetLogId);
 
-            Assert.NotNull(
-                registroSalvo);
+            Assert.NotNull(registroSalvo);
 
-            Assert.Equal(
-                pet.PetId,
-                registroSalvo.PetId);
+            Assert.Equal(pet.PetId,registroSalvo.PetId);
 
-            Assert.Equal(
-                tutor.UserId,
-                registroSalvo.CreatedByUserId);
+            Assert.Equal(tutor.UserId,registroSalvo.CreatedByUserId);
 
-            Assert.Equal(
-                "Luna ficou tranquila durante o dia.",
-                registroSalvo.Content);
+            Assert.Equal("Luna ficou tranquila durante o dia.",registroSalvo.Content);
 
-            Assert.Equal(
-                scoreAntes + EngagementPoints.DailyPetLog,
-                tutor.ScoreEngagement);
+            Assert.Equal(scoreAntes + EngagementPoints.DailyPetLog,tutor.ScoreEngagement);
         }
     }
 }

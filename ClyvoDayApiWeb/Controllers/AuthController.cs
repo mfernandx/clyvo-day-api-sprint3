@@ -45,10 +45,7 @@ namespace ClyvoDayApiWeb.Controllers
 
                 var password = body.GetProperty("password").GetString();
 
-                var result =
-                    await _authService.LoginAsync(
-                        email ?? string.Empty,
-                        password ?? string.Empty);
+                var result = await _authService.LoginAsync(email ?? string.Empty,password ?? string.Empty);
 
                 return Ok(new
                 {
@@ -92,8 +89,7 @@ namespace ClyvoDayApiWeb.Controllers
             if (!int.TryParse(userIdClaim, out var userId))
                 return Unauthorized("Token inválido.");
 
-            var user =
-                await _authService.GetAuthenticatedUserAsync(userId);
+            var user = await _authService.GetAuthenticatedUserAsync(userId);
 
             if (user == null)
                 return NotFound("Usuário não encontrado.");

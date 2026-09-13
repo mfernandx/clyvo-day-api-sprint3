@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/Itens de Solução/">
+    <File Path=".dockerignore" />
     <File Path=".gitignore" />
   </Folder>
   <Project Path="ClyvoDayApiWeb.Infrastructure/ClyvoDayApiWeb.Infrastructure.csproj" Id="98d3cf20-170c-47e5-9fb9-7b9063f2b51c" />

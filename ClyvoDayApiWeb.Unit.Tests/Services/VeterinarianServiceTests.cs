@@ -67,8 +67,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
             using var context = CreateContext();
             var service = new VeterinarianService(context, _passwordHasherMock.Object, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
-                service.GetVeterinarianByIdAsync(0));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.GetVeterinarianByIdAsync(0));
 
             Assert.Equal("O ID do veterinário deve ser maior que zero.", exception.Message);
         }
@@ -111,8 +110,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
             using var context = CreateContext();
             var service = new VeterinarianService(context, _passwordHasherMock.Object, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
-                service.CreateVeterinarianAsync(null!));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.CreateVeterinarianAsync(null!));
 
             Assert.Equal("Os dados do veterinário são obrigatórios.", exception.Message);
         }
@@ -128,8 +126,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
 
             var service = new VeterinarianService(context, _passwordHasherMock.Object, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
-                service.CreateVeterinarianAsync(veterinarian));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.CreateVeterinarianAsync(veterinarian));
 
             Assert.Equal("O nome do veterinário é obrigatório.", exception.Message);
         }
@@ -145,8 +142,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
 
             var service = new VeterinarianService(context, _passwordHasherMock.Object, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
-                service.CreateVeterinarianAsync(veterinarian));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.CreateVeterinarianAsync(veterinarian));
 
             Assert.Equal("O e-mail do veterinário é obrigatório.", exception.Message);
         }
@@ -162,8 +158,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
 
             var service = new VeterinarianService(context, _passwordHasherMock.Object, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
-                service.CreateVeterinarianAsync(veterinarian));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.CreateVeterinarianAsync(veterinarian));
 
             Assert.Equal("O CRMV é obrigatório.", exception.Message);
         }
@@ -179,8 +174,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
 
             var service = new VeterinarianService(context, _passwordHasherMock.Object, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
-                service.CreateVeterinarianAsync(veterinarian));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.CreateVeterinarianAsync(veterinarian));
 
             Assert.Equal("O estado do CRMV é obrigatório.", exception.Message);
         }
@@ -202,8 +196,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
 
             var service = new VeterinarianService(context, _passwordHasherMock.Object, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                service.CreateVeterinarianAsync(veterinarian));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => service.CreateVeterinarianAsync(veterinarian));
 
             Assert.Equal("Já existe um usuário cadastrado com este e-mail.", exception.Message);
         }
@@ -225,12 +218,9 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
 
             var service = new VeterinarianService(context, _passwordHasherMock.Object, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                service.CreateVeterinarianAsync(veterinarian));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => service.CreateVeterinarianAsync(veterinarian));
 
-            Assert.Equal(
-                "Já existe um veterinário cadastrado com este CRMV neste estado.",
-                exception.Message);
+            Assert.Equal("Já existe um veterinário cadastrado com este CRMV neste estado.", exception.Message);
         }
 
         [Fact]
@@ -248,9 +238,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
                 "Ana Lima", "ana@email.com", "123456",
                 "11988888888", "12345", "RJ", "Dermatologia");
 
-            _passwordHasherMock
-                .Setup(x => x.HashPassword(veterinarian, "123456"))
-                .Returns("senha-hasheada");
+            _passwordHasherMock.Setup(x => x.HashPassword(veterinarian, "123456")).Returns("senha-hasheada");
 
             var service = new VeterinarianService(context, _passwordHasherMock.Object, _loggerMock.Object);
 

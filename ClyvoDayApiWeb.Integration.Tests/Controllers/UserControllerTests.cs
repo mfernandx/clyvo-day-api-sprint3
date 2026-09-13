@@ -125,17 +125,14 @@ namespace ClyvoDayApiWeb.Integration.Tests.Controllers
 
             SetAuthenticatedUser(tutor.UserId);
 
-            var response = await _client.GetAsync(
-                $"/api/User/{tutor.UserId}");
+            var response = await _client.GetAsync($"/api/User/{tutor.UserId}");
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var json = await response.Content.ReadFromJsonAsync<JsonElement>();
 
-            Assert.Equal(tutor.UserId,
-                json.GetProperty("userId").GetInt32());
-            Assert.Equal("Maria Silva",
-                json.GetProperty("fullName").GetString());
+            Assert.Equal(tutor.UserId,json.GetProperty("userId").GetInt32());
+            Assert.Equal("Maria Silva",json.GetProperty("fullName").GetString());
         }
 
         [Fact]
@@ -173,17 +170,14 @@ namespace ClyvoDayApiWeb.Integration.Tests.Controllers
                 email = "novo@email.com"
             };
 
-            var response = await _client.PutAsJsonAsync(
-                $"/api/User/{tutor.UserId}/email", body);
+            var response = await _client.PutAsJsonAsync($"/api/User/{tutor.UserId}/email", body);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var json = await response.Content.ReadFromJsonAsync<JsonElement>();
 
-            Assert.Equal(tutor.UserId,
-                json.GetProperty("userId").GetInt32());
-            Assert.Equal("novo@email.com",
-                json.GetProperty("email").GetString());
+            Assert.Equal(tutor.UserId,json.GetProperty("userId").GetInt32());
+            Assert.Equal("novo@email.com",json.GetProperty("email").GetString());
         }
 
         [Fact]
@@ -197,8 +191,7 @@ namespace ClyvoDayApiWeb.Integration.Tests.Controllers
                 email = ""
             };
 
-            var response = await _client.PutAsJsonAsync(
-                $"/api/User/{tutor.UserId}/email", body);
+            var response = await _client.PutAsJsonAsync($"/api/User/{tutor.UserId}/email", body);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
@@ -213,8 +206,7 @@ namespace ClyvoDayApiWeb.Integration.Tests.Controllers
                 email = "novo@email.com"
             };
 
-            var response = await _client.PutAsJsonAsync(
-                "/api/User/999/email", body);
+            var response = await _client.PutAsJsonAsync("/api/User/999/email", body);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -230,17 +222,14 @@ namespace ClyvoDayApiWeb.Integration.Tests.Controllers
                 phoneNumber = "11977777777"
             };
 
-            var response = await _client.PutAsJsonAsync(
-                $"/api/User/{tutor.UserId}/phone", body);
+            var response = await _client.PutAsJsonAsync($"/api/User/{tutor.UserId}/phone", body);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
             var json = await response.Content.ReadFromJsonAsync<JsonElement>();
 
-            Assert.Equal(tutor.UserId,
-                json.GetProperty("userId").GetInt32());
-            Assert.Equal("11977777777",
-                json.GetProperty("phoneNumber").GetString());
+            Assert.Equal(tutor.UserId,json.GetProperty("userId").GetInt32());
+            Assert.Equal("11977777777",json.GetProperty("phoneNumber").GetString());
         }
 
         [Fact]
@@ -254,8 +243,7 @@ namespace ClyvoDayApiWeb.Integration.Tests.Controllers
                 phoneNumber = ""
             };
 
-            var response = await _client.PutAsJsonAsync(
-                $"/api/User/{tutor.UserId}/phone", body);
+            var response = await _client.PutAsJsonAsync($"/api/User/{tutor.UserId}/phone", body);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
@@ -266,9 +254,7 @@ namespace ClyvoDayApiWeb.Integration.Tests.Controllers
             await ResetDatabaseAsync();
             var tutor = await CreateTutorAsync();
 
-            var response = await _client.PutAsync(
-                $"/api/User/{tutor.UserId}/deactivate",
-                null);
+            var response = await _client.PutAsync($"/api/User/{tutor.UserId}/deactivate",null);
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
@@ -286,9 +272,7 @@ namespace ClyvoDayApiWeb.Integration.Tests.Controllers
         {
             await ResetDatabaseAsync();
 
-            var response = await _client.PutAsync(
-                "/api/User/999/deactivate",
-                null);
+            var response = await _client.PutAsync("/api/User/999/deactivate",null);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -299,8 +283,7 @@ namespace ClyvoDayApiWeb.Integration.Tests.Controllers
             await ResetDatabaseAsync();
             var tutor = await CreateTutorAsync();
 
-            var response = await _client.DeleteAsync(
-                $"/api/User/{tutor.UserId}");
+            var response = await _client.DeleteAsync($"/api/User/{tutor.UserId}");
 
             Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 

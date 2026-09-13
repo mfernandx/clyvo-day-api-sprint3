@@ -160,55 +160,38 @@ namespace ClyvoDayApiWeb.UnitTests.Services
 
             Assert.NotNull(tutorSalvo);
 
-            Assert.Equal(
-                "maria@email.com",
-                tutorSalvo.Email);
+            Assert.Equal("maria@email.com",tutorSalvo.Email);
 
-            Assert.Equal(
-                senhaHashGerada,
-                tutorSalvo.PasswordHash);
+            Assert.Equal(senhaHashGerada,tutorSalvo.PasswordHash);
 
-            _passwordHasherMock.Verify(
-                p => p.HashPassword(
-                    tutor,
-                    senhaDigitada),
-                Times.Once);
+            _passwordHasherMock.Verify(p => p.HashPassword(tutor,senhaDigitada),Times.Once);
         }
 
         [Fact]
         public async Task GetTutorByIdAsync_IdInvalido_DeveLancarArgumentException()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context = CreateContext();
 
-            var service =
-                CreateService(context);
+            var service = CreateService(context);
 
             // Act
-            var exception =
-                await Assert.ThrowsAsync<ArgumentException>(
-                    () => service.GetTutorByIdAsync(0));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.GetTutorByIdAsync(0));
 
             // Assert
-            Assert.Equal(
-                "O ID do tutor deve ser maior que zero.",
-                exception.Message);
+            Assert.Equal("O ID do tutor deve ser maior que zero.",exception.Message);
         }
 
         [Fact]
         public async Task GetTutorByIdAsync_TutorNaoExiste_DeveRetornarNull()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context = CreateContext();
 
-            var service =
-                CreateService(context);
+            var service = CreateService(context);
 
             // Act
-            var result =
-                await service.GetTutorByIdAsync(999);
+            var result = await service.GetTutorByIdAsync(999);
 
             // Assert
             Assert.Null(result);
@@ -218,45 +201,34 @@ namespace ClyvoDayApiWeb.UnitTests.Services
         public async Task GetTutorByIdAsync_TutorExiste_DeveRetornarTutor()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context = CreateContext();
 
-            var tutor =
-                CreateTutor();
+            var tutor = CreateTutor();
 
             context.Tutors.Add(tutor);
 
             await context.SaveChangesAsync();
 
-            var service =
-                CreateService(context);
+            var service = CreateService(context);
 
             // Act
-            var result =
-                await service.GetTutorByIdAsync(
-                    tutor.UserId);
+            var result = await service.GetTutorByIdAsync(tutor.UserId);
 
             // Assert
             Assert.NotNull(result);
 
-            Assert.Equal(
-                tutor.UserId,
-                result.UserId);
+            Assert.Equal(tutor.UserId,result.UserId);
 
-            Assert.Equal(
-                tutor.Email,
-                result.Email);
+            Assert.Equal(tutor.Email,result.Email);
         }
 
         [Fact]
         public async Task GetAllTutorsAsync_ExistemTutores_DeveRetornarTodos()
         {
             // Arrange
-            await using var context =
-                CreateContext();
+            await using var context =CreateContext();
 
-            var tutor1 =
-                CreateTutor("maria@email.com");
+            var tutor1 = CreateTutor("maria@email.com");
 
             var tutor2 = new Tutor(
                 fullName: "João Souza",
@@ -265,34 +237,21 @@ namespace ClyvoDayApiWeb.UnitTests.Services
                 phoneNumber: "11888888888"
             );
 
-            context.Tutors.AddRange(
-                tutor1,
-                tutor2);
+            context.Tutors.AddRange(tutor1,tutor2);
 
             await context.SaveChangesAsync();
 
-            var service =
-                CreateService(context);
+            var service =CreateService(context);
 
             // Act
-            var result =
-                (await service.GetAllTutorsAsync())
-                    .ToList();
+            var result = (await service.GetAllTutorsAsync()).ToList();
 
             // Assert
-            Assert.Equal(
-                2,
-                result.Count);
+            Assert.Equal(2,result.Count);
 
-            Assert.Contains(
-                result,
-                t => t.Email ==
-                     "maria@email.com");
+            Assert.Contains(result,t => t.Email == "maria@email.com");
 
-            Assert.Contains(
-                result,
-                t => t.Email ==
-                     "joao@email.com");
+            Assert.Contains(result, t => t.Email == "joao@email.com");
         }
     }
 }

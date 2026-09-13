@@ -80,8 +80,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
             using var context = CreateContext();
             var service = new UserService(context, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
-                service.GetUserByIdAsync(0));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.GetUserByIdAsync(0));
 
             Assert.Equal("O ID do usuário deve ser maior que zero.", exception.Message);
         }
@@ -155,8 +154,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
             using var context = CreateContext();
             var service = new UserService(context, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
-                service.UpdateEmailAsync(0, "novo@email.com"));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.UpdateEmailAsync(0, "novo@email.com"));
 
             Assert.Equal("O ID do usuário deve ser maior que zero.", exception.Message);
         }
@@ -167,8 +165,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
             using var context = CreateContext();
             var service = new UserService(context, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
-                service.UpdateEmailAsync(1, ""));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.UpdateEmailAsync(1, ""));
 
             Assert.Equal("O e-mail é obrigatório.", exception.Message);
         }
@@ -179,8 +176,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
             using var context = CreateContext();
             var service = new UserService(context, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                service.UpdateEmailAsync(999, "novo@email.com"));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => service.UpdateEmailAsync(999, "novo@email.com"));
 
             Assert.Equal("Usuário não encontrado.", exception.Message);
         }
@@ -198,8 +194,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
 
             var service = new UserService(context, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                service.UpdateEmailAsync(tutor.UserId, "novo@email.com"));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => service.UpdateEmailAsync(tutor.UserId, "novo@email.com"));
 
             Assert.Equal("Usuário inativo.", exception.Message);
         }
@@ -217,8 +212,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
 
             var service = new UserService(context, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
-                service.UpdateEmailAsync(tutor2.UserId, "maria@email.com"));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.UpdateEmailAsync(tutor2.UserId, "maria@email.com"));
 
             Assert.Equal("Este e-mail já está sendo utilizado por outro usuário.", exception.Message);
         }
@@ -251,8 +245,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
             using var context = CreateContext();
             var service = new UserService(context, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
-                service.UpdatePhoneNumberAsync(0, "11977777777"));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.UpdatePhoneNumberAsync(0, "11977777777"));
 
             Assert.Equal("O ID do usuário deve ser maior que zero.", exception.Message);
         }
@@ -263,8 +256,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
             using var context = CreateContext();
             var service = new UserService(context, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
-                service.UpdatePhoneNumberAsync(1, ""));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.UpdatePhoneNumberAsync(1, ""));
 
             Assert.Equal("O número de telefone é obrigatório.", exception.Message);
         }
@@ -275,8 +267,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
             using var context = CreateContext();
             var service = new UserService(context, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                service.UpdatePhoneNumberAsync(999, "11977777777"));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => service.UpdatePhoneNumberAsync(999, "11977777777"));
 
             Assert.Equal("Usuário não encontrado.", exception.Message);
         }
@@ -294,8 +285,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
 
             var service = new UserService(context, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                service.UpdatePhoneNumberAsync(tutor.UserId, "11977777777"));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => service.UpdatePhoneNumberAsync(tutor.UserId, "11977777777"));
 
             Assert.Equal("Usuário inativo.", exception.Message);
         }
@@ -311,9 +301,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
 
             var service = new UserService(context, _loggerMock.Object);
 
-            var result = await service.UpdatePhoneNumberAsync(
-                tutor.UserId,
-                "11977777777");
+            var result = await service.UpdatePhoneNumberAsync(tutor.UserId,"11977777777");
 
             Assert.Equal("11977777777", result.PhoneNumber);
             Assert.NotNull(result.UpdatedAt);
@@ -330,8 +318,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
             using var context = CreateContext();
             var service = new UserService(context, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
-                service.DeactivateAsync(0));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.DeactivateAsync(0));
 
             Assert.Equal("O ID do usuário deve ser maior que zero.", exception.Message);
         }
@@ -342,8 +329,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
             using var context = CreateContext();
             var service = new UserService(context, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                service.DeactivateAsync(999));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => service.DeactivateAsync(999));
 
             Assert.Equal("Usuário não encontrado.", exception.Message);
         }
@@ -361,8 +347,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
 
             var service = new UserService(context, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                service.DeactivateAsync(tutor.UserId));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => service.DeactivateAsync(tutor.UserId));
 
             Assert.Equal("Este usuário já está inativo.", exception.Message);
         }
@@ -392,8 +377,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
             using var context = CreateContext();
             var service = new UserService(context, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<ArgumentException>(() =>
-                service.DeleteAsync(0));
+            var exception = await Assert.ThrowsAsync<ArgumentException>(() => service.DeleteAsync(0));
 
             Assert.Equal("O ID do usuário deve ser maior que zero.", exception.Message);
         }
@@ -404,8 +388,7 @@ namespace ClyvoDayApiWeb.Unit.Tests.Services
             using var context = CreateContext();
             var service = new UserService(context, _loggerMock.Object);
 
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-                service.DeleteAsync(999));
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => service.DeleteAsync(999));
 
             Assert.Equal("Usuário não encontrado.", exception.Message);
         }

@@ -7,7 +7,7 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 
-namespace ClyvoDayApiWeb.IntegrationTests.Controllers
+namespace ClyvoDayApiWeb.Integration.Tests.Controllers
 {
     [Collection("ApiCollection")]
     public class PetControllerTests
