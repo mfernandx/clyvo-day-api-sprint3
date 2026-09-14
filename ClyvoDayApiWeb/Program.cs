@@ -31,13 +31,17 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
+var connectionString =
+    Environment.GetEnvironmentVariable("OracleConnection")
+    ?? builder.Configuration.GetConnectionString("OracleConnection");
+
+
 //Injetando o contexto do banco de dados na aplicação, utilizando a string de conexão obtida
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        new MySqlServerVersion(new Version(8, 0, 0))
-    )
-);
+//Injetando o contexto do banco de dados na aplicação, utilizando a string de conexão obtida
+builder.Services.AddDbContext<AppDbContext>(
+    options =>
+    options.UseOracle(connectionString,
+    compatibility => compatibility.UseOracleSQLCompatibility(OracleSQLCompatibility.DatabaseVersion19)));
 
 
 builder.Services.AddHealthChecks()
