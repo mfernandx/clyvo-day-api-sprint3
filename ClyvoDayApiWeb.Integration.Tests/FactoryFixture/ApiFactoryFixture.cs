@@ -60,16 +60,16 @@ namespace ClyvoDayApiWeb.Integration.Tests.FactoryFixture
         {
         }
 
+
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            var userId = Request.Headers["X-Test-UserId"].FirstOrDefault() ?? "1";
+            if (Request.Headers["X-Test-Unauthenticated"] == "true")
+                return Task.FromResult(AuthenticateResult.NoResult());
 
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, userId),
-                new Claim("sub", userId),
-                new Claim(ClaimTypes.Role, "Tutor")
-            };
+            var userId = Request.Headers["X-Test-UserId"].FirstOrDefault() ?? "1";
+            var role = Request.Headers["X-Test-Role"].FirstOrDefault() ?? "Tutor";
+
+            var claims = new[]{new Claim(ClaimTypes.NameIdentifier, userId), new Claim("sub", userId), new Claim(ClaimTypes.Role, role)};
 
             var identity = new ClaimsIdentity(claims, "Test");
             var principal = new ClaimsPrincipal(identity);
@@ -77,5 +77,6 @@ namespace ClyvoDayApiWeb.Integration.Tests.FactoryFixture
 
             return Task.FromResult(AuthenticateResult.Success(ticket));
         }
+
     }
 }

@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
-
-namespace ClyvoDayApiWeb.Domain.Models
+﻿namespace ClyvoDayApiWeb.Domain.Models
 {
     public class Pet
     {

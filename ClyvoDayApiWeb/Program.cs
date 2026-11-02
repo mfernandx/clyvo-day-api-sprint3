@@ -1,5 +1,8 @@
 using ClyvoDayApiWeb.Data;
 using ClyvoDayApiWeb.Domain.Models;
+using ClyvoDayApiWeb.Infrastructure;
+using ClyvoDayApiWeb.MongoDB;
+using ClyvoDayApiWeb.MongoDB.Repositories;
 using ClyvoDayApiWeb.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,11 +13,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Scalar.AspNetCore;
-using System.Text;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using System.Text.Json;
 using Serilog;
-using ClyvoDayApiWeb.Infrastructure;
+using System.Text;
+using System.Text.Json;
+using ClyvoDayApiWeb.HealthChecks;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,7 +40,6 @@ var connectionString =
 
 
 //Injetando o contexto do banco de dados na aplicação, utilizando a string de conexão obtida
-//Injetando o contexto do banco de dados na aplicação, utilizando a string de conexão obtida
 builder.Services.AddDbContext<AppDbContext>(
     options =>
     options.UseOracle(connectionString,
@@ -51,6 +53,12 @@ builder.Services.AddHealthChecks()
         name: "Oracle Database",
         failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy,
         tags: new[] { "database", "oracle", "ready" })
+
+    // Verifica conexão com MongoDB
+    .AddCheck<MongoDbHealthCheck>(
+        name: "MongoDB",
+        failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy,
+        tags: new[] { "database", "mongodb", "ready" })
 
     // Health Check simples da aplicação
     .AddCheck("API Running",
@@ -99,6 +107,7 @@ builder.Services.AddScoped<CareEventService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+builder.Services.AddScoped<IPetTimelineService, PetTimelineService>();
 
 // CORS 
 builder.Services.AddCors(options =>
@@ -141,6 +150,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
                 ClockSkew = TimeSpan.Zero
             };
     });
+
+
+//MongoDB
+builder.Services.AddSingleton<MongoDbContext>();
+builder.Services.AddSingleton<IPetTimelineRepository, PetTimelineRepository>();
 
 
 var app = builder.Build();
