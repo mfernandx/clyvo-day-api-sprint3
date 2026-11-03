@@ -239,6 +239,13 @@ app.MapHealthChecks("/health/details", new HealthCheckOptions
 var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
 app.Urls.Add($"http://0.0.0.0:{port}");
 
+app.MapGet("/version", () => new
+{
+    Application = "CLYVO DAY API",
+    Version = "1.0.1",
+    Message = "API atualizada automaticamente pelo Azure DevOps"
+});
+
 app.Run();
 
 internal sealed class BearerSecuritySchemeTransformer(
